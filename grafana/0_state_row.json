@@ -1,0 +1,14 @@
+{
+    "collapsed": false,
+    "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 123,
+        "y": 123
+    },
+    "id": null,
+    "panels": [],
+    "repeat": null,
+    "title": "State",
+    "type": "row"
+}
