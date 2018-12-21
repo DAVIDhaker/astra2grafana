@@ -24,5 +24,7 @@ In `./grafana` found separated template, you can customize/change it.
 Result looks like this:
 ![Grafana](/preview.png)
 
+In graph of stream red color means CC errors.
+
 ---
 P.S.: For now it was made for myself and not have presentative look, because have little of time, but it works. Also, for now you can`t change grid properties quickly (size, count of graphs per row, etc.).

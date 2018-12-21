@@ -41,7 +41,8 @@
 		{
 			"alias": "CC errors",
 			"color": "#ff0000",
-			"legend": false
+			"legend": false,
+			"hideTooltip": true
 		},
 		{
 			"alias": "Bitrate",

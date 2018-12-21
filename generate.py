@@ -51,62 +51,32 @@ for file in sorted(listdir('grafana')):
 
     _panel = jload('grafana/' + file)
 
-    if name == 'channel':
+    if name == 'channel' or name == 'transponder':
         item_counter = 0
 
         try:
-            for stream in sorted(astra_conf['make_stream'], key=itemgetter('name')):
-                if not stream['enable']: # show only enabled streams
+            for sequence in sorted(astra_conf['make_stream' if name == 'channel' else 'dvb_tune'], key=itemgetter('name')):
+                if not sequence['enable']: # Show only enabled streams and transponders
                     continue
 
-                print('\t' + stream['name'])
+                print('\t' + sequence['name'])
 
                 panel = deepcopy(_panel)
                 panel['maxDataPoints'] = maxDataPoints
                 panel['datasource'] = datasource
-                panel['title'] = stream['name']
+                panel['title'] = sequence['name']
                 panel['id'] = id()
                 panel['gridPos']['x'] = floor(item_counter % 4) * 6
-                panel['gridPos']['y'] = floor(item_counter / 4) * 6 + y 
+                panel['gridPos']['y'] = floor(item_counter / 4) * (6 if name == 'channel' else 7) + y
 
-                for i in range(2):
-                    panel['targets'][i]['query'] = panel['targets'][i]['query'].replace('{id}', stream['id'])
-                
-                board['panels'].append(panel)
-                item_counter += 1
-            y = panel['gridPos']['y'] + panel['gridPos']['w']
-        except:
-            pass
-
-    elif name == 'transponder':
-        item_counter = 0
-
-        try:
-            for transponder in sorted(astra_conf['dvb_tune'], key=itemgetter('name')):
-                if not transponder['enable']:
-                    continue
-
-                print('\t' + transponder['name'])
-
-                panel = deepcopy(_panel)
-
-                panel['maxDataPoints'] = maxDataPoints
-                panel['datasource'] = datasource
-                panel['title'] = transponder['name']
-                panel['id'] = id()
-                panel['gridPos']['x'] = floor(item_counter % 4) * 6
-                panel['gridPos']['y'] = floor(item_counter / 4) * 7 + y
-
-                for i in range(2):
-                    panel['targets'][i]['query'] = panel['targets'][i]['query'].replace('{id}', transponder['id'])
+                for target in panel['targets']:
+                    target['query'] = target['query'].replace('{id}', sequence['id'])
 
                 board['panels'].append(panel)
-
                 item_counter += 1
-            y = panel['gridPos']['y'] + panel['gridPos']['w']
+            y = panel['gridPos']['y'] + panel['gridPos']['h']
         except:
-            pass
-        
+            print('\tFail to process ' + name)        
     else:
         panel = deepcopy(_panel)
 
@@ -122,7 +92,7 @@ for file in sorted(listdir('grafana')):
         
         panel['gridPos']['y'] = y
         
-        y += panel['gridPos']['w']
+        y += panel['gridPos']['h']
 
         panel['id'] = id()
         board['panels'].append(panel)
